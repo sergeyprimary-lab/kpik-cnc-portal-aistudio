@@ -73,9 +73,9 @@ const VacanciesSection: React.FC<Props> = ({ vacancies: initialVacancies }) => {
             </span>
             <span className="text-blue-700 text-sm font-bold uppercase tracking-wider">Моніторинг вакансій</span>
           </div>
-          <h2 className="text-4xl font-black text-slate-900 mb-4 tracking-tighter uppercase">Вакансії для операторів</h2>
+          <h2 className="text-4xl font-black text-slate-900 mb-4 tracking-tighter uppercase">Вакансії для операторів ЧПК</h2>
           <p className="text-slate-600 max-w-2xl mx-auto text-lg mb-6">
-            Отримуйте найсвіжіші вакансії з ринку праці України в режимі реального часу.
+            Перегляньте найкращі актуальні вакансії з ринку праці України.
           </p>
           
           <div className="flex flex-col items-center space-y-6">
@@ -97,7 +97,7 @@ const VacanciesSection: React.FC<Props> = ({ vacancies: initialVacancies }) => {
                   <svg className="w-6 h-6 mr-3 text-blue-400 group-hover:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                   </svg>
-                  Оновити вакансії (AI)
+                  Завантажити вакансії з Work.ua (AI)
                 </>
               )}
             </button>
