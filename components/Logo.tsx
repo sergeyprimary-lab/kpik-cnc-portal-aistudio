@@ -9,7 +9,7 @@ interface LogoProps {
 
 const Logo: React.FC<LogoProps> = ({ 
   className = "h-12 w-auto", 
-  imageUrl = "https://raw.githubusercontent.com/sergeyprimary-lab/kpik-cnc-portal-aistudio/refs/heads/main/components/logo-transp.png?token=GHSAT0AAAAAADVJUJZL2WH5JGYXCHMGWJKW2MOGS7Q" 
+  imageUrl = "https://raw.githubusercontent.com/sergeyprimary-lab/kpik-cnc-portal-aistudio/main/components/logo-transp.png" 
 }) => {
   const [hasError, setHasError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);

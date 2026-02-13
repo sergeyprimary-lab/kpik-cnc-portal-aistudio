@@ -14,7 +14,7 @@ interface Message {
 
 const EnrollmentAssistant: React.FC<Props> = ({ isOpen, onClose }) => {
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'model', text: 'Вітаю! Я ваш персональний асистент KPIK. Я допоможу вам записатися на курс оператора ЧПК. Як я можу до вас звертатися?' }
+    { role: 'model', text: 'Вітаю! Я ваш персональний АІ асистент. Я допоможу вам записатися на курс оператора ЧПК в коледжі індустрії, бізнесу та ІТ. Як я можу до вас звертатися?' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -37,6 +37,37 @@ const EnrollmentAssistant: React.FC<Props> = ({ isOpen, onClose }) => {
     setMessages(prev => [...prev, { role: 'user', text: userMessage }]);
     setIsLoading(true);
 
+    // --- ПОКРАЩЕНА БЕК-ЕНД ЛОГІКА ВИЛУЧЕННЯ ДАНИХ ---
+    setUserData(prev => {
+      const updated = { ...prev };
+      
+      // 1. Пошук телефону через очищення від не-цифр
+      const digits = userMessage.replace(/\D/g, '');
+      // Шукаємо 10 цифр (0...) або 12 цифр (380...)
+      const phoneMatch = digits.match(/(?:38)?0\d{9}/);
+      
+      if (phoneMatch && !updated.phone) {
+        updated.phone = phoneMatch[0];
+      }
+
+      // 2. Вилучення імені
+      if (!updated.name) {
+        // Якщо в повідомленні є телефон, спробуємо прибрати його, щоб знайти ім'я
+        const namePart = userMessage.replace(/(?:\+?38)?[\s\-]?\(?0\d{2}\)?[\s\-]?\d{1,3}[\s\-]?\d{1,3}[\s\-]?\d{1,3}[\s\-]?\d{1,3}/g, '').trim();
+        if (namePart.length > 1 && namePart.length < 40) {
+          // Прибираємо зайві слова "мене звати", "я" і т.д. для форми
+          const cleanName = namePart.replace(/(мене звати|я|це|ім'я|мене кличуть)\s+/gi, '');
+          updated.name = cleanName;
+        }
+      } 
+      // 3. Вилучення інтересу
+      else if (updated.name && updated.phone && !updated.interest && !phoneMatch) {
+        updated.interest = userMessage;
+      }
+
+      return updated;
+    });
+
     try {
       const ai = new GoogleGenAI({ apiKey: (process.env.API_KEY || '') });
       const chat = ai.chats.create({
@@ -49,14 +80,11 @@ const EnrollmentAssistant: React.FC<Props> = ({ isOpen, onClose }) => {
       const history = messages.map(m => `${m.role === 'user' ? 'Користувач' : 'Асистент'}: ${m.text}`).join('\n');
       
       const response = await chat.sendMessage({ 
-        message: `${history}\nКористувач каже: ${userMessage}\nПродовжуй діалог або підсумуй, якщо дані зібрано.` 
+        message: `${history}\nКористувач каже: ${userMessage}\nПродовжуй діалог або підсумуй, якщо дані зібрано.`  
       });
 
       const aiText = response.text || "Вибачте, я не зміг обробити ваше повідомлення. Спробуйте ще раз.";
       setMessages(prev => [...prev, { role: 'model', text: aiText }]);
-      
-      if (userMessage.match(/\+?\d{10,12}/)) setUserData(prev => ({ ...prev, phone: userMessage }));
-      if (messages.length < 3) setUserData(prev => ({ ...prev, name: userMessage }));
 
     } catch (error) {
       setMessages(prev => [...prev, { role: 'model', text: 'Вибачте, сталася помилка. Спробуйте ще раз або зателефонуйте нам прямо зараз.' }]);
@@ -65,7 +93,15 @@ const EnrollmentAssistant: React.FC<Props> = ({ isOpen, onClose }) => {
     }
   };
 
-  const googleFormUrl = `https://docs.google.com/forms/d/e/1FAIpQLSfYourFormID/viewform?usp=pp_url&entry.1=NAME&entry.2=PHONE`;
+  // Формування URL
+  const formId = "1FAIpQLSe9ArZjIMnQ8yeOl0uLaYUbRVVD3sK6nSh-HpWFuhNd4JdLQA";
+  const googleFormUrl = `https://docs.google.com/forms/d/e/${formId}/viewform?usp=pp_url` + 
+    `&entry.2011983711=${encodeURIComponent(userData.name)}` + 
+    `&entry.1621985097=${encodeURIComponent(userData.phone)}` + 
+    `&entry.1304381872=${encodeURIComponent(userData.interest)}`;
+
+  // Кнопка активна, якщо є хоча б Ім'я та Телефон
+  const isFormReady = !!(userData.name && userData.phone);
 
   if (!isOpen) return null;
 
@@ -136,9 +172,9 @@ const EnrollmentAssistant: React.FC<Props> = ({ isOpen, onClose }) => {
                 href={googleFormUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 text-center bg-green-600 text-white py-2 rounded-lg text-sm font-bold hover:bg-green-700 transition shadow-md"
+                className={`flex-1 text-center py-2 rounded-lg text-sm font-bold transition shadow-md ${isFormReady ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-slate-200 text-slate-400 pointer-events-none'}`}
               >
-                Підтвердити в Google Form
+                Підтвердити і надіслати інформацію
               </a>
             </div>
           </div>
