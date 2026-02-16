@@ -102,7 +102,7 @@ const App: React.FC = () => {
                 <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
               </div>
               <h3 className="text-2xl font-black mb-4 uppercase tracking-tight">Стабільність</h3>
-              <p className="text-slate-600 leading-relaxed font-medium">Ми супроводжуємо кожного студента до моменту підписання трудового договору.</p>
+              <p className="text-slate-600 leading-relaxed font-medium">Знання та  навички, що будуть у попиті на ринку праці впродовж десятиліть.</p>
             </div>
             <div className="p-10 rounded-[2.5rem] bg-blue-50/50 hover:bg-blue-100 transition-all duration-500 reveal stagger-3 border border-blue-100/50">
               <div className="w-16 h-16 bg-blue-600 text-white rounded-2xl flex items-center justify-center mb-8 shadow-xl shadow-blue-500/20 transform -rotate-3 group-hover:rotate-0 transition-transform">

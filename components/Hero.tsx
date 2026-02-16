@@ -61,7 +61,7 @@ const Hero: React.FC<Props> = ({ onStartEnrollment }) => {
             Стань майстром <span className="text-blue-400">майбутнього</span>
           </h1>
           <p className="text-base sm:text-xl text-slate-100 mb-8 sm:10 leading-relaxed animate-fade-in-up stagger-3 drop-shadow-lg font-medium">
-            Опануй мистецтво програмування та керування сучасними фрезерними центрами. Від складної моделі до ідеального виробу разом з KPIK.
+            Опануй мистецтво програмування та керування сучасними фрезерними центрами. Від складної моделі до ідеального виробу разом з Камянець-Подільським коледжем індустрії, бізнесу та інформаційних технологій.
           </p>
           <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 animate-fade-in-up" style={{animationDelay: '0.4s'}}>
             <button 
