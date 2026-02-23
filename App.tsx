@@ -193,7 +193,7 @@ const App: React.FC = () => {
           </div>
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-24 pt-8 border-t border-white/5 text-center text-slate-500 text-[12px] font-black tracking-[0.1em]">
-          © 2026 Кам’янець-Подільський фаховий коледж індустрії, бізнесу та інформаційних технологій. Webdesign - Serhii Kovalenko
+          © 2026 Кам’янець-Подільський фаховий коледж індустрії, бізнесу та інформаційних технологій
         </div>
       </footer>
     </main>
