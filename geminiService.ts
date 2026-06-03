@@ -1,7 +1,14 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-const getAIInstance = () => new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+const getAIInstance = () => new GoogleGenAI({ 
+  apiKey: process.env.API_KEY || process.env.GEMINI_API_KEY || '',
+  httpOptions: {
+    headers: {
+      'User-Agent': 'aistudio-build',
+    }
+  }
+});
 
 // Реальні вакансії для показу, якщо AI-ліміт вичерпано
 const FALLBACK_VACANCIES = [
@@ -76,7 +83,7 @@ export const generateJobAdvice = async (jobTitle: string): Promise<string> => {
   try {
     const ai = getAIInstance();
     const response = await ai.models.generateContent({
-      model: 'gemini-flash-lite-latest',
+      model: 'gemini-3.5-flash',
       contents: `Напиши коротку професійну пораду (1 речення) для оператора ЧПК, який подається на вакансію: ${jobTitle}`,
     });
     return response.text || "Ретельно перевіряйте прив'язку інструменту.";
@@ -89,7 +96,7 @@ export const searchExternalVacancies = async () => {
   try {
     const ai = getAIInstance();
     const response = await ai.models.generateContent({
-      model: 'gemini-flash-lite-latest',
+      model: 'gemini-3.5-flash',
       contents: "Знайди 4 свіжі вакансії 'Оператор ЧПК' на сайті work.ua. Поверни відповідь СУВОРО у форматі JSON масиву об'єктів з полями: title, company, salary, description, location, sourceUrl. Не додавай зайвого тексту, тільки JSON.",
       config: {
         tools: [{ googleSearch: {} }],

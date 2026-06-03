@@ -201,6 +201,28 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen overflow-x-hidden">
+      {/* Partners Banner */}
+      <div className="w-full bg-white py-3 border-b border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 flex justify-center items-center">
+          <img 
+            src="/partners-banner.png" 
+            alt="Partners" 
+            className="h-8 sm:h-10 md:h-12 w-auto object-contain"
+            onError={(e) => {
+              // Fallback if image is missing
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+              const parent = target.parentElement;
+              if (parent && !parent.querySelector('.fallback-text')) {
+                const span = document.createElement('span');
+                span.className = 'fallback-text text-[10px] font-bold text-slate-400 uppercase tracking-widest';
+                span.innerText = 'Наші партнери та донори';
+                parent.appendChild(span);
+              }
+            }}
+          />
+        </div>
+      </div>
       <Navbar onNav={handleNav} currentPage={currentPage} onLogout={handleLogout} isAuth={isAdminAuthenticated} />
       
       {currentPage === 'home' ? (

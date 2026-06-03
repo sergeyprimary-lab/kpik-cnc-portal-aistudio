@@ -69,9 +69,16 @@ const EnrollmentAssistant: React.FC<Props> = ({ isOpen, onClose }) => {
     });
 
     try {
-      const ai = new GoogleGenAI({ apiKey: (process.env.API_KEY || '') });
+      const ai = new GoogleGenAI({ 
+        apiKey: process.env.API_KEY || process.env.GEMINI_API_KEY || '',
+        httpOptions: {
+          headers: {
+            'User-Agent': 'aistudio-build',
+          }
+        }
+      });
       const chat = ai.chats.create({
-        model: 'gemini-flash-lite-latest',
+        model: 'gemini-3.5-flash',
         config: {
           systemInstruction: `Ти — привітний асистент коледжу KPIK. Твоя мета — зібрати дані для запису на курс Операторів ЧПК: 1) Ім'я 2) Номер телефону 3) Чому цікавить ця професія. Спілкуйся українською мовою, коротко і професійно. Коли отримаєш всі дані, скажи користувачу, що він може натиснути кнопку "Підтвердити реєстрацію" нижче.`,
         },
