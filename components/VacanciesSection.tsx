@@ -44,12 +44,14 @@ const VacanciesSection: React.FC<Props> = ({ vacancies: initialVacancies }) => {
     try {
       const result = await searchExternalVacancies();
       
-      if (result.error === "QUOTA_EXHAUSTED") {
-        setSearchError("Ліміт AI-запитів вичерпано. Показуємо збережені пропозиції.");
+      if (result.error) {
+        if (result.error === "QUOTA_EXHAUSTED") {
+          setSearchError("Ліміт AI-запитів вичерпано. Показуємо збережені пропозиції.");
+        } else {
+          setSearchError("Сервіс пошуку тимчасово недоступний через ліміт API. Показуємо збережені пропозиції.");
+        }
         setRawExternalResponse(result.data); // result.data містить FALLBACK_VACANCIES
         setDataSource('fallback');
-      } else if (result.error) {
-        setSearchError("Сервіс тимчасово недоступний. Спробуйте пізніше.");
       } else {
         setRawExternalResponse(result.data);
         setCachedVacancies(result.data);

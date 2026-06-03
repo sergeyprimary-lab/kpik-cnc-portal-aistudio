@@ -55,6 +55,7 @@ export const setCachedVacancies = (data: any) => {
 
 export const safeParseJson = (input: any): any[] => {
   if (!input) return [];
+  if (Array.isArray(input)) return input;
   
   // Витягуємо текст з різних можливих структур відповіді Gemini
   let text = "";
@@ -83,7 +84,7 @@ export const generateJobAdvice = async (jobTitle: string): Promise<string> => {
   try {
     const ai = getAIInstance();
     const response = await ai.models.generateContent({
-      model: 'gemini-3.5-flash',
+      model: 'gemini-3.1-flash-lite',
       contents: `Напиши коротку професійну пораду (1 речення) для оператора ЧПК, який подається на вакансію: ${jobTitle}`,
     });
     return response.text || "Ретельно перевіряйте прив'язку інструменту.";
@@ -96,7 +97,7 @@ export const searchExternalVacancies = async () => {
   try {
     const ai = getAIInstance();
     const response = await ai.models.generateContent({
-      model: 'gemini-3.5-flash',
+      model: 'gemini-3.1-flash-lite',
       contents: "Знайди 4 свіжі вакансії 'Оператор ЧПК' на сайті work.ua. Поверни відповідь СУВОРО у форматі JSON масиву об'єктів з полями: title, company, salary, description, location, sourceUrl. Не додавай зайвого тексту, тільки JSON.",
       config: {
         tools: [{ googleSearch: {} }],
@@ -112,7 +113,14 @@ export const searchExternalVacancies = async () => {
   } catch (error: any) {
     console.error("Search API Error:", error);
     // Обробка квот або помилок аргументів
-    if (error?.message?.includes("429") || error?.status === "RESOURCE_EXHAUSTED") {
+    const errMsg = String(error?.message || "").toLowerCase();
+    const isQuotaExhausted = errMsg.includes("429") || 
+                            errMsg.includes("quota") || 
+                            errMsg.includes("limit") || 
+                            errMsg.includes("exhausted") || 
+                            error?.status === "RESOURCE_EXHAUSTED";
+                            
+    if (isQuotaExhausted) {
       return { data: FALLBACK_VACANCIES, error: "QUOTA_EXHAUSTED", source: 'fallback' };
     }
     return { data: FALLBACK_VACANCIES, error: "API_ERROR", source: 'fallback' };

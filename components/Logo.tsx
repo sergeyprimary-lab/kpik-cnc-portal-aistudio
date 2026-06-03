@@ -1,9 +1,7 @@
-
 import React, { useState } from 'react';
 
 interface LogoProps {
-  className?: string;
-  // Пряме посилання на Raw-файл з GitHub
+  className?: string; // Пряме посилання на Raw-файл з GitHub
   imageUrl?: string;
 }
 
